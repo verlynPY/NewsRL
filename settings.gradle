@@ -1,0 +1,2 @@
+rootProject.name = "NewsRealTime"
+include ':app'
