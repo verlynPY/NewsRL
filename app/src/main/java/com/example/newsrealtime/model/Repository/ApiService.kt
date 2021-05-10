@@ -8,6 +8,6 @@ import retrofit2.http.Query
 interface ApiService {
 
     @GET("everything")
-    fun GetAllNews(@Query("q") Search: String, @Query("apiKey") ApiKey: String): Call<Example>
+    suspend fun GetAllNews(@Query("q") Search: String, @Query("apiKey") ApiKey: String): Example
 
 }

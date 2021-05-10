@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.newsrealtime.Article
 import com.example.newsrealtime.Example
+import com.example.newsrealtime.model.Repository.Credentials.retrofit
 import com.google.gson.GsonBuilder
 import retrofit2.Call
 import retrofit2.Callback
@@ -14,14 +15,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class Data {
 
-    fun GetNews(Search: String): ArrayList<Article>{
+    suspend fun GetNews(Search: String): Example{
         var liveData = ArrayList<Article>()
-        val retrofit = Retrofit.Builder()
-                .baseUrl(Credentials.URL)
-                .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
-                .build()
-        
-        val client: ApiService = retrofit.create<ApiService>(ApiService::class.java)
+
+        return retrofit.GetAllNews(Search, Credentials.ApiKey)
+
+        /*val client: ApiService = retrofit.create<ApiService>(ApiService::class.java)
         client.GetAllNews(Search, Credentials.ApiKey).enqueue(object: Callback<Example>{
             override fun onResponse(call: Call<Example>, response: Response<Example>) {
                 if(response.isSuccessful){
@@ -39,9 +38,9 @@ class Data {
                 t.printStackTrace()
             }
 
-        })
+        })*/
 
-        return liveData
+        //return liveData
 
     }
 
