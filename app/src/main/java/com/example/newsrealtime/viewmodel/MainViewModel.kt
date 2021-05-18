@@ -10,6 +10,7 @@ import com.example.newsrealtime.Article
 import com.example.newsrealtime.Example
 import com.example.newsrealtime.model.Repository.Data
 import com.example.newsrealtime.model.Repository.DataFlow
+
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -26,7 +27,7 @@ class MainViewModel: ViewModel() {
      //fun GetArticles(){
     init {
          viewModelScope.launch(Dispatchers.Main) {
-             var flows = SettingData("Apple")
+             var flows = SettingData("Tesla")
                      .flowOn(Dispatchers.IO)
                      .transform {
                          emit(it)

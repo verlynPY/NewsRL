@@ -15,7 +15,7 @@ import com.example.newsrealtime.R
 object MaterialThemee {
 
     private val Lobster_Two = fontFamily(
-            font(R.font.lobstertwobold
+            font(R.font.newsreadervariable
             )
     )
 
@@ -38,12 +38,26 @@ object MaterialThemee {
     )
 
     val QuizSans = Typography(
-            h2 = TextStyle(
+            h4 = TextStyle(
                     fontFamily = Lobster_Two,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 30.sp
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 24.sp
+            ),
+            h5 = TextStyle(
+                    fontFamily = Lobster_Two,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 18.sp
+            ),
+            h6 = TextStyle(
+                    fontFamily = Lobster_Two,
+                    fontWeight = FontWeight.Light,
+                    fontSize = 12.sp
             )
+
+
     )
+
+
 
     val Courgette = Typography(
             h3 = TextStyle(

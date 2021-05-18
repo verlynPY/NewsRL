@@ -10,4 +10,7 @@ interface ApiService {
     @GET("everything")
     suspend fun GetAllNews(@Query("q") Search: String, @Query("apiKey") ApiKey: String): Example
 
+    @GET("top-headlines")
+    suspend fun GetTopNews(@Query("country") Country: String, @Query("apiKey") ApiKey: String): Example
+
 }
