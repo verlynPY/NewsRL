@@ -7,7 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 object Credentials {
 
     val URL = "https://newsapi.org/v2/"
-    val ApiKey = "bab374c174f7476cb338de2f76011036"
+    val ApiKey = "0a74832aaaf84421b9d72b9acd5331f5"
 
     val retrofit = Retrofit.Builder()
             .baseUrl(URL)

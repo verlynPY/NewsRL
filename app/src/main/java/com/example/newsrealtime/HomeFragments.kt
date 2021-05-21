@@ -38,16 +38,18 @@ import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.example.newsrealtime.model.ConnectionManager
 import com.example.newsrealtime.model.Utils
 import com.example.newsrealtime.view.ComponentsView
 import com.example.newsrealtime.view.ComponentsView.All
 import com.example.newsrealtime.view.ComponentsView.CircularProgress
 import com.example.newsrealtime.view.ComponentsView.ItemNews
 import com.example.newsrealtime.view.ComponentsView.ItemNewsFirtsIndex
-import com.example.newsrealtime.view.ComponentsView.NotNetwork
 import com.example.newsrealtime.view.ComponentsView.stamp
 import com.example.newsrealtime.view.MaterialThemee
 import com.example.newsrealtime.view.MaterialThemee.QuizSans
+import com.example.newsrealtime.view.UtilsView.LoadedData
+import com.example.newsrealtime.view.UtilsView.LoadingData
 import com.example.newsrealtime.viewmodel.MainViewModel
 import kotlinx.coroutines.flow.collect
 
@@ -68,7 +70,6 @@ class HomeFragments : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
 
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
@@ -127,19 +128,17 @@ class HomeFragments : Fragment() {
 
                         }
                         }
-                            ShowItems(text.value)
+                            ShowItems(text.value, context)
                     }
-                }
+                }                                              
             }
         }
     }
 
     @Composable
-    fun ShowItems(Country: String) {
+    fun ShowItems(Country: String, context: Context) {
         viewModel.EmitTopNews(Country)
-        val cm = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
-        val isConnected: Boolean = activeNetwork?.isConnectedOrConnecting == true
+        var isConnected = ConnectionManager().VerifyConnection(context)
         if (isConnected) {
             var Active = remember { mutableStateOf(false) }
             var ListArticle = ArrayList<Article>()
@@ -167,51 +166,14 @@ class HomeFragments : Fragment() {
             }
 
             if (!Active.value) {
-                var TIME = remember { mutableStateOf(false) }
-                CircularProgress()
-                val handler = Handler()
-            handler.postDelayed(object : Runnable {
-                override fun run() {
-
-                    TIME.value = true
-                }
-            }, TIEMPO)
-            if(TIME.value){
-
-                NotNetwork(onClick = {
-                    Refresh()
-                })
-            }
+                LoadingData(onClick = { Refresh() })
             }
             else if (Active.value) {
-                Column {
-                    Spacer(modifier = Modifier.height(70.dp))
-                    LazyColumn {
-                        itemsIndexed(items = ListArticle) { index, Article ->
-                            if(!Article.description.isNullOrEmpty() || !Article.content.isNullOrEmpty() || !Article.author.isNullOrEmpty()) {
-                                when (index) {
-                                    0 -> {
-
-                                        context?.let { ItemNewsFirtsIndex(Article, it) }
-
-
-                                    }
-                                    else -> {
-
-                                        context?.let { ItemNews(Article, it) }
-
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                }
+                LoadedData(context, ListArticle, true)
             }
-
         }
         else{
-            NotNetwork(onClick = {
+            ComponentsView.NotNetwork(onClick = {
                 when (isConnected){
                     true -> {
                         Refresh()

@@ -36,7 +36,7 @@ class SplashScreenActivity : AppCompatActivity() {
                             verticalArrangement = Arrangement.Center
                         ) {
                             Text(
-                                text = "NewsRL", style = MaterialThemee.Courgette.h1,
+                                text = "NewsRT", style = MaterialThemee.Courgette.h1,
                                 color = Color.Red
                             )
                         }

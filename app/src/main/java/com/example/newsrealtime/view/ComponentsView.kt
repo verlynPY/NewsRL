@@ -30,6 +30,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.example.newsrealtime.Article
@@ -53,7 +54,7 @@ object ComponentsView {
                     .background(MaterialTheme.colors.primary)
                     .padding(10.dp)){
 
-                Text(text = "NewsRL", style = MaterialThemee.Courgette.h3,
+                Text(text = "NewsRT", style = MaterialThemee.Courgette.h3,
                         color = Color.Red)
 
             }
@@ -170,10 +171,13 @@ object ComponentsView {
                 .clip(RoundedCornerShape(10.dp))
 
         var bitmap by remember { mutableStateOf<Bitmap?>(null)}
-        Glide.with(AmbientContext.current).asBitmap()
+        Glide.with(AmbientContext.current)
+                .asBitmap()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .load(article.urlToImage)
                 .placeholder(R.drawable.sin_imagen)
                 .error(R.drawable.sin_imagen)
+
                 .into(object : CustomTarget<Bitmap>() {
                     override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                         bitmap = resource
@@ -183,6 +187,7 @@ object ComponentsView {
 
                     }
                 })
+
         Box(modifier = Modifier
                 .fillMaxWidth()
                 .preferredHeight(150.dp)
@@ -283,7 +288,7 @@ object ComponentsView {
                 Column(modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally){
                     Text(
-                        text = "NewsRL", style = MaterialThemee.Courgette.h2,
+                        text = "NewsRT", style = MaterialThemee.Courgette.h2,
                         color = Color.Red
                     )
                 }
@@ -298,7 +303,7 @@ object ComponentsView {
                 Column(modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally){
                     Text(
-                        text = "NewsRL", style = MaterialThemee.Courgette.h2,
+                        text = "NewsRT", style = MaterialThemee.Courgette.h2,
                         color = Color.Red
                     )
                 }
@@ -313,7 +318,7 @@ object ComponentsView {
                 Column(modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally){
                     Text(
-                        text = "NewsRL", style = MaterialThemee.Courgette.h2,
+                        text = "NewsRT", style = MaterialThemee.Courgette.h2,
                         color = Color.Red
                     )
                 }

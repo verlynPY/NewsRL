@@ -1,9 +1,11 @@
 package com.example.newsrealtime
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -38,10 +40,12 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.example.newsrealtime.model.ConnectionManager
 import com.example.newsrealtime.view.ComponentsView
 import com.example.newsrealtime.view.ComponentsView.ItemNews
 import com.example.newsrealtime.view.ComponentsView.NotResultYet
 import com.example.newsrealtime.view.MaterialThemee
+import com.example.newsrealtime.view.UtilsView
 import com.example.newsrealtime.viewmodel.HistoryViewModel
 import com.example.newsrealtime.viewmodel.MainViewModel
 import kotlinx.coroutines.flow.collect
@@ -117,7 +121,7 @@ class SearchFragment : Fragment() {
                         }
                         if(!Search.value.equals("")){
                             mainviewModel.EmitDataSearch(Search.value)
-                            ShowItem()
+                            ShowItem(context)
                         }
                         else{
                             NotResultYet()
@@ -130,10 +134,8 @@ class SearchFragment : Fragment() {
 
     @Suppress("DEPRECATION")
     @Composable
-    fun ShowItem(){
-        val cm = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
-        val isConnected: Boolean = activeNetwork?.isConnectedOrConnecting == true
+    fun ShowItem(context: Context){
+        var isConnected = ConnectionManager().VerifyConnection(context)
         if (isConnected) {
             var Active = remember { mutableStateOf(false) }
             var ListArticle = ArrayList<Article>()
@@ -161,40 +163,37 @@ class SearchFragment : Fragment() {
             }
 
             if (!Active.value) {
-                var TIME = remember { mutableStateOf(false) }
-                ComponentsView.CircularProgress()
-                val handler = Handler()
-                handler.postDelayed(object : Runnable {
-                    override fun run() {
-
-                        TIME.value = true
-                    }
-                }, 5000L)
-                if(TIME.value){
-
-                    ComponentsView.NotNetwork(onClick = {
-                        //Refresh()
-                    })
-                }
+                UtilsView.LoadingData(onClick = { Refresh() })
             }
             else if (Active.value) {
-                Column {
-                    Spacer(modifier = Modifier.height(70.dp))
-                    LazyColumn {
-                        itemsIndexed(items = ListArticle) { index, Article ->
-                            context?.let { ItemNews(Article, it) }
-                        }
-                    }
-
-                }
+                UtilsView.LoadedData(context, ListArticle, false)
             }
 
         }
         else{
             ComponentsView.NotNetwork(onClick = {
-                //Refresh()
+                when (isConnected){
+                    true -> {
+                        Refresh()
+                    }
+                    false -> {
+                        Toast.makeText(context, "Not Connected", Toast.LENGTH_SHORT).show()
+                        Refresh()
+                    }
+                }
             })
         }
+    }
+
+    @SuppressLint("UseRequireInsteadOfGet")
+    fun Refresh(){
+        val ft = fragmentManager!!.beginTransaction()
+        if (Build.VERSION.SDK_INT >= 26) {
+            ft.setReorderingAllowed(false)
+        }
+        ft.detach(this)
+            .attach(this)
+            .commit()
     }
 
     companion object {
