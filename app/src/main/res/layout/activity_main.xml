@@ -8,8 +8,8 @@
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/navigation_view"
-        android:layout_width="280dp"
-        android:layout_height="55dp"
+        android:layout_width="220dp"
+        android:layout_height="60dp"
         android:layout_marginBottom="20dp"
         android:background="@drawable/bg_bottomnav"
         app:layout_constraintBottom_toBottomOf="parent"

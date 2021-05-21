@@ -21,6 +21,11 @@ object Utils {
     val PUBLISHEDAT = "publishedAt"
     val URLIMAGE = "urlImage"
 
+    var ListCountry = listOf("ae","ar","at","au","be","bg","br","ca","ch","cn","co","cu",
+        "cz","de","eg","fr","gb", "gr","hk","hu","id","ie","il","in","it","jp","kr","lt",
+        "lv","ma","mx","my","ng", "nl","no","nz","ph","pl","pt","ro","rs","ru","sa","se",
+        "sg","si","sk","th","tr","tw","ua","us","ve","za")
+
     fun SendDescription(context: Context, article: Article){
 
         val intent = Intent(context, DescriptionNewsActivity::class.java)
@@ -33,11 +38,13 @@ object Utils {
         bundle.putString(URLIMAGE, article.urlToImage)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.putExtras(bundle)
-
         context.startActivity(intent)
 
 
     }
+
+
+
 
     fun DateFormat(oldstringDate: String?): String? {
         val newDate: String?

@@ -10,6 +10,7 @@ import com.example.newsrealtime.Article
 import com.example.newsrealtime.Example
 import com.example.newsrealtime.model.Repository.Data
 import com.example.newsrealtime.model.Repository.DataFlow
+import com.example.newsrealtime.model.Repository.Room.History
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -19,36 +20,80 @@ class MainViewModel: ViewModel() {
 
     val dataflow = DataFlow()
 
+    private val _Country = MutableLiveData("")
+
+    val Country: LiveData<String> = _Country
 
     private val _uiState = MutableStateFlow(LatestNewsUiState.Success(null))
     // The UI collects from this StateFlow to get its state updates
     val uiState: StateFlow<LatestNewsUiState> = _uiState
-    var ListArticles = MutableLiveData<ArrayList<Article>>()
-     //fun GetArticles(){
-    init {
+
+    fun onCountryChange(newCountry: String) {
+        _Country.value = newCountry
+    }
+
+    /*init {
          viewModelScope.launch(Dispatchers.Main) {
-             var flows = SettingData("Tesla")
+             var flows = GettingData("US")
                      .flowOn(Dispatchers.IO)
                      .transform {
                          emit(it)
                      }
-                     .collect { example ->
-                         _uiState.value = LatestNewsUiState.Success(example.articles)
+                     .collect { item ->
+                         _uiState.value = LatestNewsUiState.Success(item.articles)
                          //Log.e(TAG, "${example.articles}")
                      }
          }
-     }
+     }*/
 
-    //}
+    fun EmitTopNews(Country: String){
+        viewModelScope.launch(Dispatchers.Main) {
+            var flows = GettingData(Country)
+                    .flowOn(Dispatchers.IO)
+                    .transform {
+                        emit(it)
+                    }
+                    .collect { item ->
+                        _uiState.value = LatestNewsUiState.Success(item.articles)
+                        //Log.e(TAG, "${example.articles}")
+                    }
+        }
+    }
+
+    fun EmitDataSearch(Search: String){
+
+        viewModelScope.launch(Dispatchers.Main){
+            GettingDataSearch(Search)
+                    .flowOn(Dispatchers.IO)
+                    .transform {
+                        emit(it)
+                    }
+                    .collect { item ->
+                        
+                        _uiState.value = LatestNewsUiState.Success(item.articles)
+                    }
+        }
+    }
 
     val data: Data = Data()
-    fun SettingData(Search: String) = flow{
-        var ListArticle = data.GetNews(Search)
-        //for(i in ListArticle){
+    fun GettingData(Country: String) = flow{
+        try {
+            var ListArticle = data.GetTopNews(Country)
             emit(ListArticle)
-            //Log.e(TAG, "$i")
-        //}
+        }
+        catch(e: Exception){
+            println(e)
+        }
+    }
 
+    fun GettingDataSearch(Search: String) = flow{
+        try {
+            var ListArticlesearch = data.GetNews(Search)
+            emit(ListArticlesearch)
+        }
+        catch(e: Exception){
+            println(e)
+        }
     }
 
     sealed class LatestNewsUiState {

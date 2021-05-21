@@ -20,27 +20,12 @@ class Data {
 
         return retrofit.GetAllNews(Search, Credentials.ApiKey)
 
-        /*val client: ApiService = retrofit.create<ApiService>(ApiService::class.java)
-        client.GetAllNews(Search, Credentials.ApiKey).enqueue(object: Callback<Example>{
-            override fun onResponse(call: Call<Example>, response: Response<Example>) {
-                if(response.isSuccessful){
-                    var articles = response.body()!!.articles
-                    for(i in articles!!){
-                        liveData.add(i)
-                        //Log.e(TAG, "$i")
-                    }
-                    //Log.e(TAG, "${call.request().url()}")
+    }
 
-                }
-            }
+    suspend fun GetTopNews(Country: String): Example{
+        var liveData = ArrayList<Article>()
 
-            override fun onFailure(call: Call<Example>, t: Throwable) {
-                t.printStackTrace()
-            }
-
-        })*/
-
-        //return liveData
+        return retrofit.GetTopNews(Country, Credentials.ApiKey)
 
     }
 

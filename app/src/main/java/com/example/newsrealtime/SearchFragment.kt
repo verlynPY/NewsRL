@@ -1,20 +1,29 @@
 package com.example.newsrealtime
 
+import android.content.ContentValues
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.Bundle
+import android.os.Handler
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -28,10 +37,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.example.newsrealtime.view.ComponentsView
+import com.example.newsrealtime.view.ComponentsView.ItemNews
+import com.example.newsrealtime.view.ComponentsView.NotResultYet
 import com.example.newsrealtime.view.MaterialThemee
 import com.example.newsrealtime.viewmodel.HistoryViewModel
-import com.google.android.material.chip.Chip
+import com.example.newsrealtime.viewmodel.MainViewModel
+import kotlinx.coroutines.flow.collect
 
 
 private const val ARG_PARAM1 = "param1"
@@ -41,6 +54,8 @@ private const val ARG_PARAM2 = "param2"
 class SearchFragment : Fragment() {
 
     private val viewModel: HistoryViewModel by viewModels()
+    private val mainviewModel: MainViewModel by viewModels()
+
 
     private var param1: String? = null
     private var param2: String? = null
@@ -61,6 +76,7 @@ class SearchFragment : Fragment() {
         return ComposeView(requireContext()).apply {
 
             setContent {
+
                 MaterialTheme(
                     typography = MaterialThemee.QuizSans,
                     colors = if (isSystemInDarkTheme()) MaterialThemee.DarkColor
@@ -69,30 +85,115 @@ class SearchFragment : Fragment() {
                     ConstraintLayout(Modifier.background(MaterialTheme.colors.background)) {
 
                         //viewModel.SettingDataBase(context)
-
+                        viewModel.GetHistory(context)
+                        /*lifecycleScope.launchWhenStarted {
+                            viewModel.uiState.collect { uiState ->
+                                when (uiState){
+                                    is HistoryViewModel.HistoryNewsUiState.Success -> {
+                                        Toast.makeText(context, "${uiState.history}", Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                            }
+                        }*/
                             ComponentsView.stamp()
                             var Search = remember { mutableStateOf("") }
                         Row(modifier = Modifier.fillMaxWidth().absolutePadding(left = 100.dp, top = 10.dp)) {
-                            OutlinedTextField(
+                            TextField(
                                     value = Search.value,
                                     onValueChange = { Search.value = it },
                                     modifier = Modifier
-                                            .border(width = 2.dp, brush = SolidColor(Color.Gray),
-                                                shape = RoundedCornerShape(30.dp)).preferredHeight(40.dp),
-                                    placeholder = { Text(text = "Search", fontSize = 18.sp, fontWeight = FontWeight.Bold) },
+                                            .background(
+                                                    brush = SolidColor(Color.Gray),
+                                                            shape = RoundedCornerShape(30.dp)
+                                            ),
+                                    placeholder = { Text(text = "Search", style = MaterialTheme.typography.h5) },
+                                    leadingIcon = { Icon(vectorResource(R.drawable.ic_search), modifier = Modifier.size(24.dp), tint = Color.Gray) },
+                                    activeColor = Color.Transparent,
+                                    backgroundColor = Color.Transparent,
+                                    inactiveColor = Color.Transparent,
                                     textStyle = MaterialTheme.typography.h5
-
-
 
                             )
                         }
-
-
-
-
+                        if(!Search.value.equals("")){
+                            mainviewModel.EmitDataSearch(Search.value)
+                            ShowItem()
+                        }
+                        else{
+                            NotResultYet()
+                        }
                     }
                 }
             }
+        }
+    }
+
+    @Suppress("DEPRECATION")
+    @Composable
+    fun ShowItem(){
+        val cm = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
+        val isConnected: Boolean = activeNetwork?.isConnectedOrConnecting == true
+        if (isConnected) {
+            var Active = remember { mutableStateOf(false) }
+            var ListArticle = ArrayList<Article>()
+            lifecycleScope.launchWhenStarted {
+                // Triggers the flow and starts listening for values
+                mainviewModel.uiState.collect { uiState ->
+                    // New value received
+                    when (uiState) {
+                        is MainViewModel.LatestNewsUiState.Success -> {
+                            //Log.e(TAG,"${uiState.news}")
+                            if (uiState.news != null) {
+                                for (i in uiState.news) {
+                                    ListArticle.add(i)
+                                    if (!ListArticle.isEmpty()) {
+                                        Active.value = true
+                                    }
+                                }
+                                //ItemNews(uiState.news.get(4))
+                                Log.e(ContentValues.TAG, "${uiState.news}")
+                            }
+                        }
+                        is MainViewModel.LatestNewsUiState.Error -> Log.e(ContentValues.TAG, "${uiState.exception}")
+                    }
+                }
+            }
+
+            if (!Active.value) {
+                var TIME = remember { mutableStateOf(false) }
+                ComponentsView.CircularProgress()
+                val handler = Handler()
+                handler.postDelayed(object : Runnable {
+                    override fun run() {
+
+                        TIME.value = true
+                    }
+                }, 5000L)
+                if(TIME.value){
+
+                    ComponentsView.NotNetwork(onClick = {
+                        //Refresh()
+                    })
+                }
+            }
+            else if (Active.value) {
+                Column {
+                    Spacer(modifier = Modifier.height(70.dp))
+                    LazyColumn {
+                        itemsIndexed(items = ListArticle) { index, Article ->
+                            context?.let { ItemNews(Article, it) }
+                        }
+                    }
+
+                }
+            }
+
+        }
+        else{
+            ComponentsView.NotNetwork(onClick = {
+                //Refresh()
+            })
         }
     }
 

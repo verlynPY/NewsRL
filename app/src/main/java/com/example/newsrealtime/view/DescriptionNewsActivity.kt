@@ -14,6 +14,7 @@ import androidx.compose.material.icons.filled.ArrowBackIos
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.AmbientContext
@@ -24,6 +25,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.example.newsrealtime.R
+import com.example.newsrealtime.model.Utils
 import com.example.newsrealtime.model.Utils.AUTHOR
 import com.example.newsrealtime.model.Utils.CONTENT
 import com.example.newsrealtime.model.Utils.DESCRIPTION
@@ -109,9 +111,10 @@ class DescriptionNewsActivity : AppCompatActivity() {
 
                             IconButton(onClick = {
                                 finish()
+                                overridePendingTransition(0,0)
                             }){
 
-                                    Icon(Icons.Filled.ArrowBackIos)
+                                    Icon(Icons.Filled.ArrowBackIos, tint = Color.Red)
 
                         }
                         }
@@ -119,31 +122,31 @@ class DescriptionNewsActivity : AppCompatActivity() {
                         Text(
                             text = "$Title",
                             modifier = Modifier.padding(10.dp),
-                            style = MaterialTheme.typography.h4
+                            style = MaterialTheme.typography.h2
                         )
 
                         Text(
                             text = "$Author",
-                            modifier = Modifier.padding(10.dp),
+                            modifier = Modifier.absolutePadding(left = 10.dp, bottom = 2.dp),
                             style = MaterialTheme.typography.h5
                         )
 
                         Text(
-                            text = "$PublishedAt",
-                            modifier = Modifier.padding(10.dp),
+                            text = "${Utils.DateFormat(PublishedAt as String?)}",
+                            modifier = Modifier.absolutePadding(left = 10.dp, top = 2.dp),
                             style = MaterialTheme.typography.h6
                         )
 
                         Text(
                             text = "$Content",
                             modifier = Modifier.padding(10.dp),
-                            style = MaterialTheme.typography.h6
+                            style = MaterialTheme.typography.h4
                         )
 
                         Text(
                             text = "$Description",
                             modifier = Modifier.padding(10.dp),
-                            style = MaterialTheme.typography.h6
+                            style = MaterialTheme.typography.h5
                         )
 
 

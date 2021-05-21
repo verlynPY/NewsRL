@@ -38,6 +38,16 @@ object MaterialThemee {
     )
 
     val QuizSans = Typography(
+        h2 = TextStyle(
+            fontFamily = Lobster_Two,
+            fontWeight = FontWeight.Normal,
+            fontSize = 32.sp
+        ),
+        h3 = TextStyle(
+            fontFamily = Lobster_Two,
+            fontWeight = FontWeight.Normal,
+            fontSize = 28.sp
+        ),
             h4 = TextStyle(
                     fontFamily = Lobster_Two,
                     fontWeight = FontWeight.Normal,
@@ -60,6 +70,16 @@ object MaterialThemee {
 
 
     val Courgette = Typography(
+        h1 = TextStyle(
+            fontFamily = CourgetteRegural,
+            fontWeight = FontWeight.Bold,
+            fontSize = 80.sp
+        ),
+        h2 = TextStyle(
+            fontFamily = CourgetteRegural,
+            fontWeight = FontWeight.Bold,
+            fontSize = 72.sp
+        ),
             h3 = TextStyle(
                     fontFamily = CourgetteRegural,
                     fontWeight = FontWeight.Bold,
