@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.setContent
+import androidx.compose.ui.res.stringResource
 import com.example.newsrealtime.view.MainActivity
 import com.example.newsrealtime.view.MaterialThemee
 import com.example.newsrealtime.view.MaterialThemee.QuizSans
@@ -36,21 +37,19 @@ class SplashScreenActivity : AppCompatActivity() {
                             verticalArrangement = Arrangement.Center
                         ) {
                             Text(
-                                text = "NewsRT", style = MaterialThemee.Courgette.h1,
+                                text = stringResource(R.string.newsrl), style = MaterialThemee.Courgette.h1,
                                 color = Color.Red
                             )
                         }
 
+                        val TIME = 2000L
                         val handler = Handler()
-                        handler.postDelayed(object: Runnable{
-                            override fun run() {
-                                val intent = Intent(this@SplashScreenActivity, MainActivity::class.java)
-                                startActivity(intent)
-                                overridePendingTransition(0,0)
-                                finish()
-                            }
-
-                        }, 2000)
+                        handler.postDelayed({
+                            val intent = Intent(this@SplashScreenActivity, MainActivity::class.java)
+                            startActivity(intent)
+                            overridePendingTransition(0,0)
+                            finish()
+                        }, TIME)
 
                     }
                     }

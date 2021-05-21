@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.AmbientContext
 import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -54,7 +55,7 @@ object ComponentsView {
                     .background(MaterialTheme.colors.primary)
                     .padding(10.dp)){
 
-                Text(text = "NewsRT", style = MaterialThemee.Courgette.h3,
+                Text(text = stringResource(R.string.newsrl), style = MaterialThemee.Courgette.h3,
                         color = Color.Red)
 
             }
@@ -288,7 +289,7 @@ object ComponentsView {
                 Column(modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally){
                     Text(
-                        text = "NewsRT", style = MaterialThemee.Courgette.h2,
+                        text = stringResource(R.string.newsrl), style = MaterialThemee.Courgette.h2,
                         color = Color.Red
                     )
                 }
@@ -303,7 +304,7 @@ object ComponentsView {
                 Column(modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally){
                     Text(
-                        text = "NewsRT", style = MaterialThemee.Courgette.h2,
+                        text = stringResource(R.string.newsrl), style = MaterialThemee.Courgette.h2,
                         color = Color.Red
                     )
                 }
@@ -318,7 +319,7 @@ object ComponentsView {
                 Column(modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally){
                     Text(
-                        text = "NewsRT", style = MaterialThemee.Courgette.h2,
+                        text = stringResource(R.string.newsrl), style = MaterialThemee.Courgette.h2,
                         color = Color.Red
                     )
                 }
